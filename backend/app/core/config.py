@@ -12,7 +12,9 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     allow_dev_role_header: bool = True
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=(".env", "../.env"), env_file_encoding="utf-8", extra="ignore"
+    )
 
     @property
     def cors_origin_list(self) -> list[str]:

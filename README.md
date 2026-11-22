@@ -24,15 +24,18 @@ All members should agree on the contracts in `backend/app/schemas` and `docs/api
 3. Open the frontend at <http://localhost:5173> and the API docs at <http://localhost:8000/docs>.
 4. Check API liveness at <http://localhost:8000/health>.
 
-For local backend work without Docker:
+For local backend work without Docker, apply migrations before starting the API:
 
 ```sh
 cd backend
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+alembic upgrade head
 uvicorn app.main:app --reload
 ```
+
+The backend API, schema and persistence integration notes are in [`backend/README.md`](backend/README.md).
 
 For local frontend work:
 

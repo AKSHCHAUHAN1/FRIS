@@ -2,7 +2,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.health import router as health_router
+from app.api.router import api_router
 from app.core.config import get_settings
+from app.core.errors import register_error_handlers
+from app.core.middleware import RequestIdMiddleware
 
 settings = get_settings()
 
@@ -14,4 +17,7 @@ app.add_middleware(
     allow_methods=["GET", "POST", "PATCH", "OPTIONS"],
     allow_headers=["Authorization", "Content-Type", "X-User-Role"],
 )
+app.add_middleware(RequestIdMiddleware)
+register_error_handlers(app)
 app.include_router(health_router)
+app.include_router(api_router, prefix=settings.api_prefix)

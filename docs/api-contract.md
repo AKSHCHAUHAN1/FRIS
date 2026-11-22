@@ -21,7 +21,9 @@ Connectors expose faculty search, author lookup, work listing, normalization and
 ## Planned HTTP routes
 
 - `GET /health`
+- `GET /api/v1/health/ready`
 - `GET /api/v1/faculty` and `GET /api/v1/faculty/{faculty_id}`
+- `POST /api/v1/faculty` and `POST /api/v1/faculty/import`
 - `GET /api/v1/faculty/{faculty_id}/publications`
 - `POST /api/v1/faculty/{faculty_id}/sync`
 - `GET /api/v1/jobs/{job_id}`
@@ -29,3 +31,5 @@ Connectors expose faculty search, author lookup, work listing, normalization and
 - `GET /api/v1/faculty/{faculty_id}/export`
 
 Responses should use stable status values, pagination where lists may grow, and safe error messages without raw provider responses or secrets.
+
+Review and sync operations require the development `X-User-Role` header while `APP_ENV=development`; production requests fail closed until a real identity provider is configured. Ordinary faculty and export responses omit institutional email.

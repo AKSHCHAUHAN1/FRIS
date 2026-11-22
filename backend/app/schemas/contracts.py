@@ -3,7 +3,7 @@ from enum import StrEnum
 from typing import Any, Protocol
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field, HttpUrl
+from pydantic import BaseModel, ConfigDict, Field, HttpUrl, field_validator
 
 
 class MatchStatus(StrEnum):
@@ -40,9 +40,9 @@ class WorkAuthor(BaseModel):
 class WorkCandidate(BaseModel):
     """Provider-neutral publication candidate emitted by scholarly connectors."""
 
-    source: str
-    source_record_id: str
-    title: str
+    source: str = Field(min_length=1, max_length=80)
+    source_record_id: str = Field(min_length=1, max_length=300)
+    title: str = Field(min_length=1, max_length=20000)
     normalized_title: str | None = None
     doi: str | None = None
     year: int | None = Field(default=None, ge=1000, le=3000)
@@ -56,6 +56,13 @@ class WorkCandidate(BaseModel):
     open_access_url: HttpUrl | None = None
     raw_payload: dict[str, Any] | None = None
     retrieved_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+
+    @field_validator("source", "source_record_id", "title", mode="before")
+    @classmethod
+    def strip_required_fields(cls, value: str) -> str:
+        if isinstance(value, str):
+            return value.strip()
+        return value
 
 
 class MatchResult(BaseModel):
