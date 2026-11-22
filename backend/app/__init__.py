@@ -1,0 +1,1 @@
+"""FRIS backend application package."""
